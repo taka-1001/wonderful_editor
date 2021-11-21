@@ -23,9 +23,8 @@ gem "jbuilder", "~> 2.7"
 # gem 'bcrypt', '~> 3.1.7'
 
 gem "active_model_serializers", "~> 0.10.0"
-gem 'devise'
+gem "devise"
 gem "devise_token_auth"
-
 
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
@@ -37,14 +36,14 @@ group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem "byebug", platforms: [:mri, :mingw, :x64_mingw]
 
+  gem "factory_bot_rails"
+  gem "faker"
   gem "pry-byebug"
   gem "pry-doc"
   gem "pry-rails"
+  gem "rspec-rails", "~> 5.0.0"
   gem "rubocop-rails"
   gem "rubocop-rspec"
-  gem 'rspec-rails', '~> 5.0.0'
-  gem 'factory_bot_rails'
-  gem 'faker'
 end
 
 group :development do
