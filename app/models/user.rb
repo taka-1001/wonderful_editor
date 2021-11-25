@@ -9,5 +9,5 @@ class User < ApplicationRecord
   has_many :articles, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :user_likes, dependent: :destroy
-  validates :user, presence: true
+  validates :name, presence: true
 end
