@@ -29,7 +29,7 @@ RSpec.describe "Articles", type: :request do
       let(:article_id) { article.id }
       let(:article) { create(:article) }
 
-      fit "その記事の詳細を取得できる" do
+      it "その記事の詳細を取得できる" do
         subject
         res = JSON.parse(response.body)
 
