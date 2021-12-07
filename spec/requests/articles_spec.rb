@@ -49,4 +49,32 @@ RSpec.describe "Articles", type: :request do
       end
     end
   end
+
+  describe "POST /api/v1/articles" do
+    subject { post(api_v1_articles_path, params: params) }
+
+    context "ログインユーザーが適切なパラメーターを送信したとき" do
+      let(:params) { { article: attributes_for(:article) } }
+      let(:current_user) { create(:user) }
+      # rubocop:disable RSpec/AnyInstance
+      before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
+      # rubocop:enable RSpec/AnyInstance
+
+      it "記事のレコードが作成できる" do
+        expect { subject }.to change { Article.where(user_id: current_user.id).count }.by(1)
+        res = JSON.parse(response.body)
+        expect(res["title"]).to eq params[:article][:title]
+        expect(res["body"]).to eq params[:article][:body]
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context "ログインユーザーがいないとき" do
+      let(:params) { { article: attributes_for(:article) } }
+
+      it "エラーする" do
+        expect { subject }.to raise_error(NoMethodError)
+      end
+    end
+  end
 end
