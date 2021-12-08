@@ -14,6 +14,12 @@ class Api::V1::ArticlesController < Api::V1::BaseApiController
     render json: article, serializer: Api::V1::ArticleSerializer
   end
 
+  def update
+    article = current_user.articles.find(params[:id])
+    article.update!(article_params)
+    render json: article, serializer: Api::V1::ArticleSerializer
+  end
+
   private
 
     def article_params
