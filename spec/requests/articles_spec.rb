@@ -108,4 +108,35 @@ RSpec.describe "Articles", type: :request do
       end
     end
   end
+
+  describe "DELETE /api/v1/article/:id" do
+    subject { delete(api_v1_article_path(article_id)) }
+
+    let(:current_user) { create(:user) }
+
+    # rubocop:disable RSpec/AnyInstance
+    before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
+    # rubocop:enable RSpec/AnyInstance
+
+    context "ログインユーザーが記事のレコードを削除しようとしたとき" do
+      let(:article_id) { article.id }
+      let!(:article) { create(:article, user: current_user) }
+
+      it "記事を削除できる" do
+        expect { subject }.to change { Article.count }.by(-1)
+        expect(response).to have_http_status(:no_content)
+      end
+    end
+
+    context "ログインユーザー以外のユーザーが記事のレコードを削除しようとしたとき" do
+      let(:other_user) { create(:user) }
+      let(:article_id) { article.id }
+      let!(:article) { create(:article, user: other_user) }
+
+      it "記事を削除できない" do
+        expect { subject }.to raise_error(ActiveRecord::RecordNotFound) &
+                              change { Article.count }.by(0)
+      end
+    end
+  end
 end
