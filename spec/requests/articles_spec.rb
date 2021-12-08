@@ -77,4 +77,35 @@ RSpec.describe "Articles", type: :request do
       end
     end
   end
+
+  describe "PATCH /api/v1/article/:id" do
+    subject { patch(api_v1_article_path(article_id), params: params) }
+
+    let(:params) { { article: attributes_for(:article), created_at: 1.day.ago } }
+    let(:current_user) { create(:user) }
+
+    # rubocop:disable RSpec/AnyInstance
+    before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
+    # rubocop:enable RSpec/AnyInstance
+
+    context "ログインユーザーが記事のレコードを更新しようとしたとき" do
+      let(:article_id) { article.id }
+      let(:article) { create(:article, user: current_user) }
+
+      it "記事を更新できる" do
+        expect { subject }.to change { article.reload.title }.from(article.title).to(params[:article][:title]) &
+                              change { article.reload.body }.from(article.body).to(params[:article][:body]) &
+                              not_change { article.reload.created_at }
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context "ログインユーザーでない人が記事のレコードを更新しようとしたとき" do
+      let(:article_id) { 20000 }
+
+      it "記事の更新できない" do
+        expect { subject }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
 end
