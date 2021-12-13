@@ -3,6 +3,7 @@ require "rails_helper"
 RSpec.describe "Api::V1::Auth::Sessions", type: :request do
   describe "POST /api/v1/auth/sign_in" do
     subject { post(api_v1_user_session_path, params: params) }
+
     context "email, password が正しいとき" do
       let(:params) { { email: current_user.email, password: current_user.password } }
       let(:user) { create(:user) }
