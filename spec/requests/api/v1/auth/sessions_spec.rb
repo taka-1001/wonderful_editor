@@ -5,7 +5,7 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
     subject { post(api_v1_user_session_path, params: params) }
 
     context "email, password が正しいとき" do
-      let(:params) { { email: current_user.email, password: current_user.password } }
+      let(:params) { { email: user.email, password: user.password } }
       let(:user) { create(:user) }
       it "ログインできる" do
         subject
@@ -18,7 +18,7 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
     end
 
     context "email が正しくないとき" do
-      let(:params) { { email: "test@example.cpm", password: current_user.password } }
+      let(:params) { { email: "test@example.cpm", password: user.password } }
       let(:user) { create(:user) }
       # rubocop:disable RSpec/ExampleLength
       it "ログインできない" do
@@ -35,7 +35,7 @@ RSpec.describe "Api::V1::Auth::Sessions", type: :request do
     end
 
     context "password が正しくないとき" do
-      let(:params) { { email: current_user.email, password: "password" } }
+      let(:params) { { email: user.email, password: "password" } }
       let(:user) { create(:user) }
       it "ログインできない" do
         # rubocop:enable RSpec/ExampleLength
