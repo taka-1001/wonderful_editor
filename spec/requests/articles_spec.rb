@@ -51,14 +51,12 @@ RSpec.describe "Articles", type: :request do
   end
 
   describe "POST /api/v1/articles" do
-    subject { post(api_v1_articles_path, params: params) }
+    subject { post(api_v1_articles_path, params: params, headers: headers) }
 
     context "ログインユーザーが適切なパラメーターを送信したとき" do
       let(:params) { { article: attributes_for(:article) } }
+      let(:headers) { current_user.create_new_auth_token }
       let(:current_user) { create(:user) }
-      # rubocop:disable RSpec/AnyInstance
-      before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
-      # rubocop:enable RSpec/AnyInstance
 
       it "記事のレコードが作成できる" do
         expect { subject }.to change { Article.where(user_id: current_user.id).count }.by(1)
@@ -73,20 +71,19 @@ RSpec.describe "Articles", type: :request do
       let(:params) { { article: attributes_for(:article) } }
 
       it "エラーする" do
-        expect { subject }.to raise_error(NoMethodError)
+        subject
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end
 
   describe "PATCH /api/v1/article/:id" do
-    subject { patch(api_v1_article_path(article_id), params: params) }
+    subject { patch(api_v1_article_path(article_id), params: params, headers: headers) }
 
     let(:params) { { article: attributes_for(:article), created_at: 1.day.ago } }
     let(:current_user) { create(:user) }
+    let(:headers) { current_user.create_new_auth_token }
 
-    # rubocop:disable RSpec/AnyInstance
-    before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
-    # rubocop:enable RSpec/AnyInstance
 
     context "ログインユーザーが記事のレコードを更新しようとしたとき" do
       let(:article_id) { article.id }
@@ -110,13 +107,11 @@ RSpec.describe "Articles", type: :request do
   end
 
   describe "DELETE /api/v1/article/:id" do
-    subject { delete(api_v1_article_path(article_id)) }
+    subject { delete(api_v1_article_path(article_id), headers: headers) }
 
     let(:current_user) { create(:user) }
+    let(:headers) { current_user.create_new_auth_token }
 
-    # rubocop:disable RSpec/AnyInstance
-    before { allow_any_instance_of(Api::V1::BaseApiController).to receive(:current_user).and_return(current_user) }
-    # rubocop:enable RSpec/AnyInstance
 
     context "ログインユーザーが記事のレコードを削除しようとしたとき" do
       let(:article_id) { article.id }
