@@ -84,7 +84,6 @@ RSpec.describe "Articles", type: :request do
     let(:current_user) { create(:user) }
     let(:headers) { current_user.create_new_auth_token }
 
-
     context "ログインユーザーが記事のレコードを更新しようとしたとき" do
       let(:article_id) { article.id }
       let(:article) { create(:article, user: current_user) }
@@ -111,7 +110,6 @@ RSpec.describe "Articles", type: :request do
 
     let(:current_user) { create(:user) }
     let(:headers) { current_user.create_new_auth_token }
-
 
     context "ログインユーザーが記事のレコードを削除しようとしたとき" do
       let(:article_id) { article.id }
