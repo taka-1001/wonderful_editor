@@ -10,8 +10,8 @@
 記事を記録、共有するためのアプリ
 
 ## URL・テストアカウント
-- ポートフォリオURL　: https://wonderful-editor-takahashi.herokuapp.com/
-- アカウント : ゲスト
+- ポートフォリオURL : https://wonderful-editor-daichi.herokuapp.com
+- アカウント : gest
 - email : gest@example.com
 - password : gestgest
 
